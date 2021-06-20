@@ -8,10 +8,10 @@ import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
-import { NetworkContextName } from '../../constants'
+import { NetworkContextName } from '../../constants/misc'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle } from '../../state/application/hook'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
@@ -24,7 +24,8 @@ import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 
 const IconWrapper = styled.div<{ size?: number }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
+  display: flex;
+  flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
   & > * {
@@ -34,7 +35,8 @@ const IconWrapper = styled.div<{ size?: number }>`
 `
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
-  ${({ theme }) => theme.flexRowNoWrap}
+  display: flex;
+  flex-flow: column nowrap;
   width: 100%;
   align-items: center;
   padding: 0.5rem;
@@ -46,54 +48,55 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
-  color: ${({ theme }) => theme.white};
+  background-color: #FD4040;
+  border: 1px solid #FD4040;
+  color: #FFFFFF;
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+    background-color: #FD4040;
   }
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
+  background-color: #376bad70;
   border: none;
-  color: ${({ theme }) => theme.primaryText1};
+  color: #6da8ff;
   font-weight: 500;
+  height: 50px;
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-    color: ${({ theme }) => theme.primaryText1};
+    border: 1px solid #376bad70;
+    color: #6da8ff;
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
-      color: ${({ theme }) => theme.primaryText1};
+      background-color: #153d6f70;
+      border: 1px solid #153d6f70;
+      color: #6da8ff;
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+        border: 1px solid #376bad70;
+        color: #6da8ff;
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+  background-color: ${({ pending }) => (pending ? '#2172E5' : '#212429')};
+  border: 1px solid ${({ pending }) => (pending ? '#2172E5' : '#2C2F36')};
+  color: ${({ pending }) => ('#FFFFFF')};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.primary1) : lighten(0.05, theme.bg1))};
+    background-color: ${({ pending }) => (pending ? '#2172E5' : '#212429')};
 
     :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg2))};
+      border: 1px solid ${({ pending }) => (pending ? '#2172E5' : '#2C2F36')};
     }
   }
 `
@@ -174,6 +177,7 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
+    console.log("connet wallet")
 
   if (account) {
     return (
@@ -192,6 +196,7 @@ function Web3StatusInner() {
       </Web3StatusConnected>
     )
   } else if (error) {
+    console.log("connet wallet")
     return (
       <Web3StatusError onClick={toggleWalletModal}>
         <NetworkIcon />
@@ -199,8 +204,9 @@ function Web3StatusInner() {
       </Web3StatusError>
     )
   } else {
+    console.log("connet wallet========")
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal}>
         <Text>{'Connect to a wallet'}</Text>
       </Web3StatusConnect>
     )
@@ -210,6 +216,8 @@ function Web3StatusInner() {
 export default function Web3Status() {
   const { active, account } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
+    console.log("connet wallet===>", active, contextNetwork);
+
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -223,9 +231,10 @@ export default function Web3Status() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
-  if (!contextNetwork.active && !active) {
-    return null
-  }
+  // if (!contextNetwork.active && !active) {
+  //   return null
+  // }
+    console.log("connet wallet")
 
   return (
     <>

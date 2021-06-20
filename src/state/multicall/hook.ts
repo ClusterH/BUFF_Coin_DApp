@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../application/hook'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -66,6 +66,8 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
   const callResults = useSelector<AppState, AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
+
+  console.log('multical callResults===>>>', callResults)
   const dispatch = useDispatch<AppDispatch>()
 
   const serializedCallKeys: string = useMemo(
@@ -176,6 +178,8 @@ export function useSingleContractMultipleData(
         : [],
     [contract, fragment, callInputs, gasRequired]
   )
+
+
 
   const results = useCallsData(calls, options)
 
